@@ -1,0 +1,48 @@
+<data transports="http https" serviceGroup="" serviceNamespace="" name="GestaoVooDataService">
+  <description>Fetching Gstao Voos</description>
+  <operation name="opPassageiroDetails">
+    <call-query href="GetPassageiroDetails">
+      <with-param name="id_passageiro " query-param="id_passageiro " />
+    </call-query>
+  </operation>
+  <operation name="opInsertReserva">
+    <call-query href="InsertReserva">
+      <with-param name="id_voo" query-param="id_voo" />
+      <with-param name="id_passageiro" query-param="id_passageiro" />
+      <with-param name="data_reserva" query-param="data_reserva" />
+      <with-param name="montante" query-param="montante" />
+      <with-param name="data_pagamento" query-param="data_pagamento" />
+      <with-param name="classe" query-param="classe" />
+      <with-param name="numero_assento" query-param="numero_assento" />
+    </call-query>
+  </operation>
+  <query id="GetPassageiroDetails" useConfig="GestaoVoosDB">
+    <sql>SELECT id_passageiro, nome, sexo, data_nascimento, endereco, num_pa, nacionalidade FROM public.passageiro where id_passageiro = :id_passageiro </sql>
+    <param type="IN" name="id_passageiro " paramType="SCALAR" sqlType="INTEGER" defaultValue="4" optional="false" />
+    <result element="VooDetails" rowName="voo">
+      <element name="id_passageiro" column="id_passageiro" xsdType="string" requiredRoles="" />
+      <element name="nome" column="nome" xsdType="string" requiredRoles="" />
+      <element name="sexo" column="sexo" xsdType="string" requiredRoles="" />
+      <element name="data_nascimento" column="data_nascimento" xsdType="string" requiredRoles="" />
+      <element name="endereco" column="endereco" xsdType="string" requiredRoles="" />
+      <element name="num_pa" column="num_pa" xsdType="string" requiredRoles="" />
+      <element name="nacionalidade" column="nacionalidade" xsdType="string" requiredRoles="" />
+    </result>
+  </query>
+  <query id="InsertReserva" useConfig="GestaoVoosDB">
+    <sql>INSERT INTO public.reserva(id_voo, id_passageiro, data_reserva, montante, data_pagamento, classe, numero_assento) VALUES (:id_voo, :id_passageiro, :data_reserva, :montante, :data_pagamento, :classe, :numero_assento)</sql>
+    <param type="IN" name="id_voo" paramType="SCALAR" sqlType="INTEGER" optional="false" />
+    <param type="IN" name="id_passageiro" paramType="SCALAR" sqlType="INTEGER" optional="false" />
+    <param type="IN" name="data_pagamento" paramType="SCALAR" sqlType="DATE" optional="false" />
+    <param type="IN" name="numero_assento" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="data_reserva" paramType="SCALAR" sqlType="DATE" optional="false" />
+    <param type="IN" name="montante" paramType="SCALAR" sqlType="NUMERIC" optional="false" />
+    <param type="IN" name="classe" paramType="SCALAR" sqlType="INTEGER" optional="false" />
+  </query>
+  <config id="GestaoVoosDB">
+    <property name="driverClassName">org.postgresql.Driver</property>
+    <property name="url">jdbc:postgresql://localhost:5432/db_gestaovoos</property>
+    <property name="username">postgres</property>
+    <property name="password">justina</property>
+  </config>
+</data>

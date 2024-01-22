@@ -9,6 +9,7 @@
   <name>ProjectoSD</name>
   <description>ProjectoSD</description>
   <modules>
+    <module>ProjectoSDDataService</module>
     <module>ProjectoSDRegistryResources</module>
     <module>ProjectoSDConnectorExporter</module>
     <module>ProjectoSDConfigs</module>
