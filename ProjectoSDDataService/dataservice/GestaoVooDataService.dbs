@@ -1,4 +1,4 @@
-<data transports="http https" serviceGroup="" serviceNamespace="" name="GestaoVooDataService">
+<data name="GestaoVooDataService" serviceNamespace="" serviceGroup="" transports="http https">
   <description>Fetching Gstao Voos</description>
   <config id="GestaoVoosDB">
     <property name="driverClassName">org.postgresql.Driver</property>
@@ -6,7 +6,7 @@
     <property name="username">postgres</property>
     <property name="password">justina</property>
   </config>
-  <resource path="/passageiros" method="GET">
+  <resource method="GET" path="/passageiros">
     <description />
     <call-query href="GetPassageiroDetails">
       <with-param name="id_passageiro " query-param="id_passageiro " />
@@ -14,104 +14,104 @@
   </resource>
   <query id="GetPassageiroDetails" useConfig="GestaoVoosDB">
     <sql>SELECT id_passageiro, nome, sexo, data_nascimento, endereco, num_pa, nacionalidade FROM public.passageiro where id_passageiro = :id_passageiro </sql>
-    <param type="IN" name="id_passageiro " paramType="SCALAR" sqlType="INTEGER" defaultValue="4" optional="false" />
-    <result element="VooDetails" rowName="voo">
-      <element name="id_passageiro" column="id_passageiro" xsdType="string" requiredRoles="" />
-      <element name="nome" column="nome" xsdType="string" requiredRoles="" />
-      <element name="sexo" column="sexo" xsdType="string" requiredRoles="" />
-      <element name="data_nascimento" column="data_nascimento" xsdType="string" requiredRoles="" />
-      <element name="endereco" column="endereco" xsdType="string" requiredRoles="" />
-      <element name="num_pa" column="num_pa" xsdType="string" requiredRoles="" />
-      <element name="nacionalidade" column="nacionalidade" xsdType="string" requiredRoles="" />
+    <param type="IN" name="id_passageiro " optional="false" defaultValue="4" sqlType="INTEGER" paramType="SCALAR" />
+    <result rowName="voo" element="VooDetails">
+      <element name="id_passageiro" requiredRoles="" xsdType="string" column="id_passageiro" />
+      <element name="nome" requiredRoles="" xsdType="string" column="nome" />
+      <element name="sexo" requiredRoles="" xsdType="string" column="sexo" />
+      <element name="data_nascimento" requiredRoles="" xsdType="string" column="data_nascimento" />
+      <element name="endereco" requiredRoles="" xsdType="string" column="endereco" />
+      <element name="num_pa" requiredRoles="" xsdType="string" column="num_pa" />
+      <element name="nacionalidade" requiredRoles="" xsdType="string" column="nacionalidade" />
     </result>
   </query>
   <query id="InsertReserva" useConfig="GestaoVoosDB">
     <sql>INSERT INTO public.reserva(id_voo, id_passageiro, data_reserva, montante, data_pagamento, classe, numero_assento) VALUES (:id_voo, :id_passageiro, :data_reserva, :montante, :data_pagamento, :classe, :numero_assento)</sql>
-    <param type="IN" name="id_voo" paramType="SCALAR" sqlType="INTEGER" optional="false" />
-    <param type="IN" name="id_passageiro" paramType="SCALAR" sqlType="INTEGER" optional="false" />
-    <param type="IN" name="data_pagamento" paramType="SCALAR" sqlType="DATE" optional="false" />
-    <param type="IN" name="numero_assento" paramType="SCALAR" sqlType="STRING" optional="false" />
-    <param type="IN" name="data_reserva" paramType="SCALAR" sqlType="DATE" optional="false" />
-    <param type="IN" name="montante" paramType="SCALAR" sqlType="NUMERIC" optional="false" />
-    <param type="IN" name="classe" paramType="SCALAR" sqlType="INTEGER" optional="false" />
+    <param type="IN" name="id_voo" optional="false" sqlType="INTEGER" paramType="SCALAR" />
+    <param type="IN" name="id_passageiro" optional="false" sqlType="INTEGER" paramType="SCALAR" />
+    <param type="IN" name="data_pagamento" optional="false" sqlType="DATE" paramType="SCALAR" />
+    <param type="IN" name="numero_assento" optional="false" sqlType="STRING" paramType="SCALAR" />
+    <param type="IN" name="data_reserva" optional="false" sqlType="DATE" paramType="SCALAR" />
+    <param type="IN" name="montante" optional="false" sqlType="NUMERIC" paramType="SCALAR" />
+    <param type="IN" name="classe" optional="false" sqlType="INTEGER" paramType="SCALAR" />
   </query>
   <query id="GetVoosDetails" useConfig="GestaoVoosDB">
     <sql>SELECT id_voo, data, capacidade, hora_partida, hora_chegada, gate_partida, gate_chegada FROM public.voo WHERE id_voo = :id_voo</sql>
-    <param type="IN" name="id_voo" paramType="SCALAR" sqlType="INTEGER" optional="false" />
-    <result element="VooDetails" rowName="voo">
-      <element name="id_voo" column="id_voo" xsdType="string" requiredRoles="" />
-      <element name="data" column="data" xsdType="string" requiredRoles="" />
-      <element name="capacidade" column="capacidade" xsdType="string" requiredRoles="" />
-      <element name="hora_partida" column="hora_partida" xsdType="string" requiredRoles="" />
-      <element name="hora_chegada" column="hora_chegada" xsdType="string" requiredRoles="" />
-      <element name="gate_partida" column="gate_partida" xsdType="string" requiredRoles="" />
-      <element name="gate_chegada" column="gate_chegada" xsdType="string" requiredRoles="" />
+    <param type="IN" name="id_voo" optional="false" sqlType="INTEGER" paramType="SCALAR" />
+    <result rowName="voo" element="VooDetails">
+      <element name="id_voo" requiredRoles="" xsdType="string" column="id_voo" />
+      <element name="data" requiredRoles="" xsdType="string" column="data" />
+      <element name="capacidade" requiredRoles="" xsdType="string" column="capacidade" />
+      <element name="hora_partida" requiredRoles="" xsdType="string" column="hora_partida" />
+      <element name="hora_chegada" requiredRoles="" xsdType="string" column="hora_chegada" />
+      <element name="gate_partida" requiredRoles="" xsdType="string" column="gate_partida" />
+      <element name="gate_chegada" requiredRoles="" xsdType="string" column="gate_chegada" />
     </result>
   </query>
   <query id="InsertManutencao" useConfig="GestaoVoosDB">
     <sql>INSERT INTO public.manutencao(id_aeronave, status, data, hora_inicio, hora_fim, id_hangar) VALUES (:id_aeronave, :status, :data, :hora_inicio, :hora_fim, :id_hangar)</sql>
-    <param type="IN" name="id_aeronave" paramType="SCALAR" sqlType="INTEGER" optional="false" />
-    <param type="IN" name="status" paramType="SCALAR" sqlType="STRING" optional="false" />
-    <param type="IN" name="data" paramType="SCALAR" sqlType="DATE" optional="false" />
-    <param type="IN" name="hora_inicio" paramType="SCALAR" sqlType="TIME" optional="false" />
-    <param type="IN" name="hora_fim" paramType="SCALAR" sqlType="TIME" optional="false" />
-    <param type="IN" name="id_hangar" paramType="SCALAR" sqlType="INTEGER" optional="false" />
+    <param type="IN" name="id_aeronave" optional="false" sqlType="INTEGER" paramType="SCALAR" />
+    <param type="IN" name="status" optional="false" sqlType="STRING" paramType="SCALAR" />
+    <param type="IN" name="data" optional="false" sqlType="DATE" paramType="SCALAR" />
+    <param type="IN" name="hora_inicio" optional="false" sqlType="TIME" paramType="SCALAR" />
+    <param type="IN" name="hora_fim" optional="false" sqlType="TIME" paramType="SCALAR" />
+    <param type="IN" name="id_hangar" optional="false" sqlType="INTEGER" paramType="SCALAR" />
   </query>
   <query id="InsertProblema" useConfig="GestaoVoosDB">
     <sql>INSERT INTO public.problemas(descricao, id_manutencao) VALUES (:descricao, :id_manutencao)</sql>
-    <param type="IN" name="descricao" paramType="SCALAR" sqlType="STRING" optional="false" />
-    <param type="IN" name="id_manutencao" paramType="SCALAR" sqlType="INTEGER" optional="false" />
+    <param type="IN" name="descricao" optional="false" sqlType="STRING" paramType="SCALAR" />
+    <param type="IN" name="id_manutencao" optional="false" sqlType="INTEGER" paramType="SCALAR" />
   </query>
   <query id="InsertTarefas" useConfig="GestaoVoosDB">
     <sql>INSERT INTO public.tarefas(descricao, id_manutencao)VALUES (:descricao, :id_manutencao)</sql>
-    <param type="IN" name="descricao" paramType="SCALAR" sqlType="STRING" optional="false" />
-    <param type="IN" name="id_manutencao" paramType="SCALAR" sqlType="INTEGER" optional="false" />
+    <param type="IN" name="descricao" optional="false" sqlType="STRING" paramType="SCALAR" />
+    <param type="IN" name="id_manutencao" optional="false" sqlType="INTEGER" paramType="SCALAR" />
   </query>
   <query id="InsertPecasManutencao" useConfig="GestaoVoosDB">
     <sql>INSERT INTO public.pecas_manutencao(id_pecas, id_manutencao) VALUES (:id_pecas, :id_manutencao)</sql>
-    <param type="IN" name="id_pecas" paramType="SCALAR" sqlType="INTEGER" optional="false" />
-    <param type="IN" name="id_manutencao" paramType="SCALAR" sqlType="INTEGER" optional="false" />
+    <param type="IN" name="id_pecas" optional="false" sqlType="INTEGER" paramType="SCALAR" />
+    <param type="IN" name="id_manutencao" optional="false" sqlType="INTEGER" paramType="SCALAR" />
   </query>
   <query id="UpdateStatusManutencao" useConfig="GestaoVoosDB">
     <sql>UPDATE public.manutencao SET status = :status WHERE id_manutencao = :id_manutencao</sql>
-    <param type="IN" name="status" paramType="SCALAR" sqlType="STRING" optional="false" />
-    <param type="IN" name="id_manutencao" paramType="SCALAR" sqlType="INTEGER" optional="false" />
+    <param type="IN" name="status" optional="false" sqlType="STRING" paramType="SCALAR" />
+    <param type="IN" name="id_manutencao" optional="false" sqlType="INTEGER" paramType="SCALAR" />
   </query>
   <query id="UpdateStatusAeronave" useConfig="GestaoVoosDB">
     <sql>UPDATE public.aeronaves SET estado = :estado WHERE id_aeronave = :id_aeronave</sql>
-    <param type="IN" name="estado " paramType="SCALAR" sqlType="STRING" optional="false" />
-    <param type="IN" name="id_aeronave" paramType="SCALAR" sqlType="INTEGER" optional="false" />
+    <param type="IN" name="estado " optional="false" sqlType="STRING" paramType="SCALAR" />
+    <param type="IN" name="id_aeronave" optional="false" sqlType="INTEGER" paramType="SCALAR" />
   </query>
   <query id="GestDisponibilidadeVoo" useConfig="GestaoVoosDB">
     <sql>SELECT id_voo, total_reserva, capacidade FROM public.v_reserva_voos WHERE id_voo = :id_voo</sql>
-    <param type="IN" name="id_voo" paramType="SCALAR" sqlType="INTEGER" optional="false" />
-    <result element="VooDetails" rowName="voo">
-      <element name="id_voo" column="id_voo" xsdType="string" requiredRoles="" />
-      <element name="total_reserva" column="total_reserva" xsdType="string" requiredRoles="" />
-      <element name="capacidade" column="capacidade" xsdType="string" requiredRoles="" />
+    <param type="IN" name="id_voo" optional="false" sqlType="INTEGER" paramType="SCALAR" />
+    <result rowName="voo" element="VooDetails">
+      <element name="id_voo" requiredRoles="" xsdType="string" column="id_voo" />
+      <element name="total_reserva" requiredRoles="" xsdType="string" column="total_reserva" />
+      <element name="capacidade" requiredRoles="" xsdType="string" column="capacidade" />
     </result>
   </query>
   <query id="GetSlotManutencao" useConfig="GestaoVoosDB">
     <sql>SELECT id_manutencao, status, data, hora_inicio, hora_fim, id_hangar, nome FROM v_slot_manutencao AND data = :data AND hora_inicio BETWEEN :hora_inicio AND :hora_fim OR hora_fim BETWEEN :hora_inicio AND :hora_fim AND nome = :nome</sql>
-    <param type="IN" name="data" paramType="SCALAR" sqlType="DATE" optional="false" />
-    <param type="IN" name="hora_inicio" paramType="SCALAR" sqlType="TIME" optional="false" />
-    <param type="IN" name="hora_fim" paramType="SCALAR" sqlType="TIME" optional="false" />
-    <param type="IN" name="nome" paramType="SCALAR" sqlType="STRING" optional="false" />
-    <result element="VooDetails" rowName="voo">
-      <element name="id_manutencao" column="id_manutencao" xsdType="string" requiredRoles="" />
-      <element name="status" column="status" xsdType="string" requiredRoles="" />
-      <element name="data" column="data" xsdType="string" requiredRoles="" />
-      <element name="hora_inicio" column="hora_inicio" xsdType="string" requiredRoles="" />
-      <element name="hora_fim" column="hora_fim" xsdType="string" requiredRoles="" />
-      <element name="id_hangar" column="id_hangar" xsdType="string" requiredRoles="" />
-      <element name="nome" column="nome" xsdType="string" requiredRoles="" />
+    <param type="IN" name="data" optional="false" sqlType="DATE" paramType="SCALAR" />
+    <param type="IN" name="hora_inicio" optional="false" sqlType="TIME" paramType="SCALAR" />
+    <param type="IN" name="hora_fim" optional="false" sqlType="TIME" paramType="SCALAR" />
+    <param type="IN" name="nome" optional="false" sqlType="STRING" paramType="SCALAR" />
+    <result rowName="voo" element="VooDetails">
+      <element name="id_manutencao" requiredRoles="" xsdType="string" column="id_manutencao" />
+      <element name="status" requiredRoles="" xsdType="string" column="status" />
+      <element name="data" requiredRoles="" xsdType="string" column="data" />
+      <element name="hora_inicio" requiredRoles="" xsdType="string" column="hora_inicio" />
+      <element name="hora_fim" requiredRoles="" xsdType="string" column="hora_fim" />
+      <element name="id_hangar" requiredRoles="" xsdType="string" column="id_hangar" />
+      <element name="nome" requiredRoles="" xsdType="string" column="nome" />
     </result>
   </query>
   <query id="UpdateReservaPagamento" useConfig="GestaoVoosDB">
     <sql>UPDATE public.reserva SET montante = :montante, data_pagamento = :data_pagamento WHERE id_reserva = :id_reserva</sql>
-    <param type="IN" name="id_reserva" paramType="SCALAR" sqlType="INTEGER" optional="false" />
-    <param type="IN" name="montante" paramType="SCALAR" sqlType="NUMERIC" optional="false" />
-    <param type="IN" name="data_pagamento" paramType="SCALAR" sqlType="DATE" optional="false" />
+    <param type="IN" name="id_reserva" optional="false" sqlType="INTEGER" paramType="SCALAR" />
+    <param type="IN" name="montante" optional="false" sqlType="NUMERIC" paramType="SCALAR" />
+    <param type="IN" name="data_pagamento" optional="false" sqlType="DATE" paramType="SCALAR" />
   </query>
   <operation name="opPassageiroDetails">
     <call-query href="GetPassageiroDetails">
@@ -194,4 +194,12 @@
       <with-param name="data_pagamento" query-param="data_pagamento" />
     </call-query>
   </operation>
+  <resource method="PUT" path="/pagamento">
+    <description />
+    <call-query href="UpdateReservaPagamento">
+      <with-param name="id_reserva" query-param="id_reserva" />
+      <with-param name="montante" query-param="montante" />
+      <with-param name="data_pagamento" query-param="data_pagamento" />
+    </call-query>
+  </resource>
 </data>

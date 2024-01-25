@@ -30,6 +30,7 @@
                 <property expression="$ctx:montante" name="montante"/>
                 <property expression="$ctx:datapagamento" name="datapagamento"/>
             </log>
+            <log level="full"/>
             <send>
                 <endpoint>
                     <address uri="http://www.example.org/service">
