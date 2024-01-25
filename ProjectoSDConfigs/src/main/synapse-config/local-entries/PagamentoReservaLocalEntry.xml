@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localEntry key="PagamentoReservaLocalEntry" xmlns="http://ws.apache.org/ns/synapse">
+    <definitions name="PagamentoReservaService" targetNamespace="http://www.example.com/pagamentoInfo" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.com/pagamentoInfo" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <types>
+            <xsd:schema targetNamespace="http://www.example.com/pagamentoInfo">
+                <xsd:element name="PagamentoRequest">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="id_reserva" type="xsd:string"/>
+                            <xsd:element name="montante" type="xsd:string"/>
+                            <xsd:element name="data_pagamento" type="xsd:string"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:schema>
+        </types>
+        <message name="PagamentoRequestMessage">
+            <part element="tns:PagamentoRequest" name="parameters"/>
+        </message>
+        <portType name="PagamentoInfoPortType">
+            <operation name="GetPagamentoInfo">
+                <input message="tns:PagamentoRequestMessage"/>
+            </operation>
+        </portType>
+        <binding name="PagamentoInfoBinding" type="tns:PagamentoInfoPortType">
+            <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+            <operation name="GetPagamentoInfo">
+                <soap:operation soapAction="http://www.example.com/pagamentoInfo/GetPagamentoInfo"/>
+                <input>
+                    <soap:body use="literal"/>
+                </input>
+            </operation>
+        </binding>
+        <service name="PagamentoReservaService">
+            <documentation>This service provides information about reserva based on their id_reserva code.</documentation>
+            <port binding="tns:PagamentoInfoBinding" name="PagamentoInfoPort">
+                <soap:address location="http://www.example.com/pagamentoReservaService"/>
+            </port>
+        </service>
+    </definitions>
+</localEntry>

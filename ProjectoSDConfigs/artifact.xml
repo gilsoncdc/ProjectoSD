@@ -8,4 +8,16 @@
     <artifact name="RegistroManutencao_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
         <file>src/main/resources/metadata/RegistroManutencao_metadata.yaml</file>
     </artifact>
+    <artifact name="GestaoVoosEndPoint" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/GestaoVoosEndPoint.xml</file>
+    </artifact>
+    <artifact name="PagamentoReservaProxyServices" groupId="com.example.proxy-service" version="1.0.0" type="synapse/proxy-service" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/proxy-services/PagamentoReservaProxyServices.xml</file>
+    </artifact>
+    <artifact name="PagamentoReservaProxyServices_proxy_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/PagamentoReservaProxyServices_proxy_metadata.yaml</file>
+    </artifact>
+    <artifact name="PagamentoReservaLocalEntry" groupId="com.example.local-entry" version="1.0.0" type="synapse/local-entry" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/local-entries/PagamentoReservaLocalEntry.xml</file>
+    </artifact>
 </artifacts>

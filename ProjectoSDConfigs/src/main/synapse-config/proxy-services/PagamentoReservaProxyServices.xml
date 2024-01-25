@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="PagamentoReservaProxyServices" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <log level="full"/>
+            <property expression="/soapenv:Envelope/soapenv:Body/pag:PagamentoRequest/id_reserva" name="idreserva" scope="default" type="STRING" xmlns:pag="http://www.example.com/pagamentoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+            <property expression="/soapenv:Envelope/soapenv:Body/pag:PagamentoRequest/montante" name="montante" scope="default" type="STRING" xmlns:pag="http://www.example.com/pagamentoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+            <property expression="/soapenv:Envelope/soapenv:Body/pag:PagamentoRequest/data_pagamento" name="datapagamento" scope="default" type="STRING" xmlns:pag="http://www.example.com/pagamentoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+            <payloadFactory media-type="xml">
+                <format>
+                    <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                            <dat:opUpdateReservaPagamento>
+                                <dat:id_reserva>$1</dat:id_reserva>
+                                <dat:montante>$2</dat:montante>
+                                <dat:data_pagamento>$3</dat:data_pagamento>
+                            </dat:opUpdateReservaPagamento>
+                        </soapenv:Body>
+                    </soapenv:Envelope>
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:idreserva"/>
+                    <arg evaluator="xml" expression="$ctx:montante"/>
+                    <arg evaluator="xml" expression="$ctx:datapagamento"/>
+                </args>
+            </payloadFactory>
+            <log>
+                <property expression="$ctx:idreserva" name="idreserva"/>
+                <property expression="$ctx:montante" name="montante"/>
+                <property expression="$ctx:datapagamento" name="datapagamento"/>
+            </log>
+            <send>
+                <endpoint>
+                    <address uri="http://www.example.org/service">
+                        <suspendOnFailure>
+                            <initialDuration>-1</initialDuration>
+                            <progressionFactor>-1</progressionFactor>
+                            <maximumDuration>0</maximumDuration>
+                        </suspendOnFailure>
+                        <markForSuspension>
+                            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                        </markForSuspension>
+                    </address>
+                </endpoint>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </target>
+    <publishWSDL key="PagamentoReservaLocalEntry" preservePolicy="true"/>
+</proxy>

@@ -6,6 +6,12 @@
     <property name="username">postgres</property>
     <property name="password">justina</property>
   </config>
+  <resource path="/passageiros" method="GET">
+    <description />
+    <call-query href="GetPassageiroDetails">
+      <with-param name="id_passageiro " query-param="id_passageiro " />
+    </call-query>
+  </resource>
   <query id="GetPassageiroDetails" useConfig="GestaoVoosDB">
     <sql>SELECT id_passageiro, nome, sexo, data_nascimento, endereco, num_pa, nacionalidade FROM public.passageiro where id_passageiro = :id_passageiro </sql>
     <param type="IN" name="id_passageiro " paramType="SCALAR" sqlType="INTEGER" defaultValue="4" optional="false" />
@@ -101,6 +107,12 @@
       <element name="nome" column="nome" xsdType="string" requiredRoles="" />
     </result>
   </query>
+  <query id="UpdateReservaPagamento" useConfig="GestaoVoosDB">
+    <sql>UPDATE public.reserva SET montante = :montante, data_pagamento = :data_pagamento WHERE id_reserva = :id_reserva</sql>
+    <param type="IN" name="id_reserva" paramType="SCALAR" sqlType="INTEGER" optional="false" />
+    <param type="IN" name="montante" paramType="SCALAR" sqlType="NUMERIC" optional="false" />
+    <param type="IN" name="data_pagamento" paramType="SCALAR" sqlType="DATE" optional="false" />
+  </query>
   <operation name="opPassageiroDetails">
     <call-query href="GetPassageiroDetails">
       <with-param name="id_passageiro " query-param="id_passageiro " />
@@ -173,6 +185,13 @@
       <with-param name="hora_inicio" query-param="hora_inicio" />
       <with-param name="hora_fim" query-param="hora_fim" />
       <with-param name="nome" query-param="nome" />
+    </call-query>
+  </operation>
+  <operation name="opUpdateReservaPagamento">
+    <call-query href="UpdateReservaPagamento">
+      <with-param name="id_reserva" query-param="id_reserva" />
+      <with-param name="montante" query-param="montante" />
+      <with-param name="data_pagamento" query-param="data_pagamento" />
     </call-query>
   </operation>
 </data>

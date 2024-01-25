@@ -1,12 +1,183 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<api context="/livro" name="BibliotecaAPI" xmlns="http://ws.apache.org/ns/synapse">
-    <resource methods="POST" url-mapping="/pecas/{var.uri.id}">
+<api context="/insert" name="GestaoVoos" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST" uri-template="/opInsertManutencao">
         <inSequence>
-            <!--This is generated API skeleton.-->
-            <!--Business Logic Goes Here-->
-            <log/>
+            <log level="full"/>
+            <property expression="json-eval($.id_aeronave)" name="idaeronave" scope="default" type="STRING"/>
+            <property expression="json-eval($.status)" name="status" scope="default" type="STRING"/>
+            <property expression="json-eval($.data)" name="data" scope="default" type="STRING"/>
+            <property expression="json-eval($.hora_inicio)" name="horainicio" scope="default" type="STRING"/>
+            <property expression="json-eval($.hora_fim)" name="horafim" scope="default" type="STRING"/>
+            <property expression="json-eval($.id_hangar)" name="idhangar" scope="default" type="STRING"/>
+            <payloadFactory media-type="xml">
+                <format>
+                    <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                            <dat:opInsertManutencao>
+                                <dat:id_aeronave>$1</dat:id_aeronave>
+                                <dat:status>$2</dat:status>
+                                <dat:data>$3</dat:data>
+                                <dat:hora_inicio>$4</dat:hora_inicio>
+                                <dat:hora_fim>$5</dat:hora_fim>
+                                <dat:id_hangar>$6</dat:id_hangar>
+                            </dat:opInsertManutencao>
+                        </soapenv:Body>
+                    </soapenv:Envelope>
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:idaeronave"/>
+                    <arg evaluator="xml" expression="$ctx:status"/>
+                    <arg evaluator="xml" expression="$ctx:data"/>
+                    <arg evaluator="xml" expression="$ctx:horainicio"/>
+                    <arg evaluator="xml" expression="$ctx:horafim"/>
+                    <arg evaluator="xml" expression="$ctx:idhangar"/>
+                </args>
+            </payloadFactory>
+            <send>
+                <endpoint>
+                    <address format="soap12" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
+                        <suspendOnFailure>
+                            <initialDuration>-1</initialDuration>
+                            <progressionFactor>-1</progressionFactor>
+                            <maximumDuration>0</maximumDuration>
+                        </suspendOnFailure>
+                        <markForSuspension>
+                            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                        </markForSuspension>
+                    </address>
+                </endpoint>
+            </send>
         </inSequence>
-        <outSequence/>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/opInsertProblema">
+        <inSequence>
+            <log level="full"/>
+            <property expression="json-eval($.descricao)" name="descricaoproblema" scope="default" type="STRING"/>
+            <property expression="json-eval($.id_manutencao)" name="idmanutencao" scope="default" type="STRING"/>
+            <payloadFactory media-type="xml">
+                <format>
+                    <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                            <dat:opInsertProblema>
+                                <dat:descricao>$1</dat:descricao>
+                                <dat:id_manutencao>$2</dat:id_manutencao>
+                            </dat:opInsertProblema>
+                        </soapenv:Body>
+                    </soapenv:Envelope>
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:descricaoproblema"/>
+                    <arg evaluator="xml" expression="$ctx:idmanutencao"/>
+                </args>
+            </payloadFactory>
+            <send>
+                <endpoint>
+                    <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
+                        <suspendOnFailure>
+                            <initialDuration>-1</initialDuration>
+                            <progressionFactor>-1</progressionFactor>
+                            <maximumDuration>0</maximumDuration>
+                        </suspendOnFailure>
+                        <markForSuspension>
+                            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                        </markForSuspension>
+                    </address>
+                </endpoint>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/opInsertTarefas">
+        <inSequence>
+            <log/>
+            <property expression="json-eval($.descricao)" name="descricao" scope="default" type="STRING"/>
+            <property expression="json-eval($.id_manutencao)" name="idmanutencao" scope="default" type="STRING"/>
+            <payloadFactory media-type="xml">
+                <format>
+                    <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                            <dat:opInsertTarefas>
+                                <dat:descricao>$1</dat:descricao>
+                                <dat:id_manutencao>$2</dat:id_manutencao>
+                            </dat:opInsertTarefas>
+                        </soapenv:Body>
+                    </soapenv:Envelope>
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:descricao"/>
+                    <arg evaluator="xml" expression="$ctx:idmanutencao"/>
+                </args>
+            </payloadFactory>
+            <send>
+                <endpoint>
+                    <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
+                        <suspendOnFailure>
+                            <initialDuration>-1</initialDuration>
+                            <progressionFactor>-1</progressionFactor>
+                            <maximumDuration>0</maximumDuration>
+                        </suspendOnFailure>
+                        <markForSuspension>
+                            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                        </markForSuspension>
+                    </address>
+                </endpoint>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/InsertPecasManutencao">
+        <inSequence>
+            <log/>
+            <property expression="json-eval($.id_pecas)" name="idpecas" scope="default" type="STRING"/>
+            <property expression="json-eval($.id_manutencao)" name="idmanutencao" scope="default" type="STRING"/>
+            <payloadFactory media-type="xml">
+                <format>
+                    <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                            <dat:InsertPecasManutencao>
+                                <dat:id_pecas>$1</dat:id_pecas>
+                                <dat:id_manutencao>$2</dat:id_manutencao>
+                            </dat:InsertPecasManutencao>
+                        </soapenv:Body>
+                    </soapenv:Envelope>
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:idpecas"/>
+                    <arg evaluator="xml" expression="$ctx:idmanutencao"/>
+                </args>
+            </payloadFactory>
+            <send>
+                <endpoint>
+                    <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
+                        <suspendOnFailure>
+                            <initialDuration>-1</initialDuration>
+                            <progressionFactor>-1</progressionFactor>
+                            <maximumDuration>0</maximumDuration>
+                        </suspendOnFailure>
+                        <markForSuspension>
+                            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                        </markForSuspension>
+                    </address>
+                </endpoint>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
         <faultSequence/>
     </resource>
 </api>

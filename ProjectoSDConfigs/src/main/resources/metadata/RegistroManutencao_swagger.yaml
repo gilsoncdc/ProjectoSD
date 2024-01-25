@@ -1,21 +1,58 @@
 openapi: 3.0.1
 info:
-  title: BibliotecaAPI
+  title: GestaoVoos
   description: API Definition of RegistroManutencao
   version: 1.0.0
 servers:
-- url: http://localhost:8290/livro
+- url: http://localhost:8290/insert
 paths:
-  /pecas/{var.uri.id}:
+  /opInsertManutencao:
     post:
-      parameters:
-      - name: var.uri.id
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+      requestBody:
+        description: Sample Payload
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: object
+        required: false
+      responses:
+        default:
+          description: Default response
+  /opInsertProblema:
+    post:
+      requestBody:
+        description: Sample Payload
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: object
+        required: false
+      responses:
+        default:
+          description: Default response
+  /opInsertTarefas:
+    post:
+      requestBody:
+        description: Sample Payload
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: object
+        required: false
+      responses:
+        default:
+          description: Default response
+  /InsertPecasManutencao:
+    post:
       requestBody:
         description: Sample Payload
         content:
