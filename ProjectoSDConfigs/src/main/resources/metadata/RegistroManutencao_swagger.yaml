@@ -6,21 +6,6 @@ info:
 servers:
 - url: http://localhost:8290/insert
 paths:
-  /opInsertManutencao:
-    post:
-      requestBody:
-        description: Sample Payload
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                payload:
-                  type: object
-        required: false
-      responses:
-        default:
-          description: Default response
   /opInsertProblema:
     post:
       requestBody:
@@ -63,6 +48,19 @@ paths:
                 payload:
                   type: object
         required: false
+      responses:
+        default:
+          description: Default response
+  /notificacao/{id_manutencao}:
+    get:
+      parameters:
+      - name: id_manutencao
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       responses:
         default:
           description: Default response

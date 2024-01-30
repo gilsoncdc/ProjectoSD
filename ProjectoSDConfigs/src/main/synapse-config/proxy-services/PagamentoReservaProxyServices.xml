@@ -3,6 +3,7 @@
     <target>
         <inSequence>
             <log level="full"/>
+            <header description="SOAPAction" name="SOAPAction" scope="transport" value="urn:opUpdateReservaPagamento"/>
             <property expression="/soapenv:Envelope/soapenv:Body/pag:PagamentoRequest/id_reserva" name="idreserva" scope="default" type="STRING" xmlns:pag="http://www.example.com/pagamentoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
             <property expression="/soapenv:Envelope/soapenv:Body/pag:PagamentoRequest/montante" name="montante" scope="default" type="STRING" xmlns:pag="http://www.example.com/pagamentoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
             <property expression="/soapenv:Envelope/soapenv:Body/pag:PagamentoRequest/data_pagamento" name="datapagamento" scope="default" type="STRING" xmlns:pag="http://www.example.com/pagamentoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
@@ -11,11 +12,11 @@
                     <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
                         <soapenv:Header/>
                         <soapenv:Body>
-                            <dat:opUpdateReservaPagamento>
+                            <dat:opUpdateReservaPagament>
                                 <dat:id_reserva>$1</dat:id_reserva>
                                 <dat:montante>$2</dat:montante>
                                 <dat:data_pagamento>$3</dat:data_pagamento>
-                            </dat:opUpdateReservaPagamento>
+                            </dat:opUpdateReservaPagament>
                         </soapenv:Body>
                     </soapenv:Envelope>
                 </format>
@@ -30,10 +31,10 @@
                 <property expression="$ctx:montante" name="montante"/>
                 <property expression="$ctx:datapagamento" name="datapagamento"/>
             </log>
-            <log level="full"/>
+            <property description="messageProperty" name="messageType" scope="axis2" type="STRING" value="application/soap+xml"/>
             <send>
                 <endpoint>
-                    <address uri="http://www.example.org/service">
+                    <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
                         <suspendOnFailure>
                             <initialDuration>-1</initialDuration>
                             <progressionFactor>-1</progressionFactor>
