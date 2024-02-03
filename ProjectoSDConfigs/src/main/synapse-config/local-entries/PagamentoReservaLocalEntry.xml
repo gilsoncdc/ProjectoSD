@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <localEntry key="PagamentoReservaLocalEntry" xmlns="http://ws.apache.org/ns/synapse">
-    <definitions name="PagamentoReservaService" targetNamespace="http://www.example.com/pagamentoInfo" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.com/pagamentoInfo" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <definitions name="GestaoReservaService" targetNamespace="http://www.example.com/gestaoInfo" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.com/gestaoInfo" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <types>
-            <xsd:schema targetNamespace="http://www.example.com/pagamentoInfo">
+            <xsd:schema targetNamespace="http://www.example.com/gestaoInfo">
                 <xsd:element name="PagamentoRequest">
                     <xsd:complexType>
                         <xsd:sequence>
@@ -12,29 +12,145 @@
                         </xsd:sequence>
                     </xsd:complexType>
                 </xsd:element>
+                <xsd:element name="DisponibilidadeRequest">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="id_voo" type="xsd:string"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="DisponibilidadeResponse">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="capacidade" type="xsd:string"/>
+                            <xsd:element name="total_reserva" type="xsd:string"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="PassageirosRequest">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="id_passageiro" type="xsd:string"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="PassageirosResponse">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="nome" type="xsd:string"/>
+                            <xsd:element name="email" type="xsd:string"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="DetalhesPassageiroRequest">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="nome" type="xsd:string"/>
+                            <xsd:element name="sexo" type="xsd:string"/>
+                            <xsd:element name="data_nascimento" type="xsd:string"/>
+                            <xsd:element name="endereco" type="xsd:string"/>
+                            <xsd:element name="num_pa" type="xsd:string"/>
+                            <xsd:element name="nacionalidade" type="xsd:string"/>
+                            <xsd:element name="email" type="xsd:string"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="ReservaRequest">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="id_voo" type="xsd:string"/>
+                            <xsd:element name="id_passageiro" type="xsd:string"/>
+                            <xsd:element name="data_reserva" type="xsd:string"/>
+                            <xsd:element name="classe" type="xsd:string"/>
+                            <xsd:element name="numero_assento" type="xsd:string"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
             </xsd:schema>
         </types>
         <message name="PagamentoRequestMessage">
             <part element="tns:PagamentoRequest" name="parameters"/>
         </message>
-        <portType name="PagamentoInfoPortType">
+        <message name="DisponibilidadeRequestMessage">
+            <part element="tns:DisponibilidadeRequest" name="parameters"/>
+        </message>
+        <message name="DisponibilidadeResponseMessage">
+            <part element="tns:DisponibilidadeResponse" name="parameters"/>
+        </message>
+        <message name="PassageiroRequestMessage">
+            <part element="tns:PassageirosRequest" name="parameters"/>
+        </message>
+        <message name="PassageiroResponseMessage">
+            <part element="tns:PassageirosResponse" name="parameters"/>
+        </message>
+        <message name="DetalhesPassageiroRequestMessage">
+            <part element="tns:DetalhesPassageiroRequest" name="parameters"/>
+        </message>
+        <message name="ReservaRequestMessage">
+            <part element="tns:ReservaRequest" name="parameters"/>
+        </message>
+        <portType name="GestaoInfoPortType">
             <operation name="GetPagamentoInfo">
                 <input message="tns:PagamentoRequestMessage"/>
             </operation>
+            <operation name="GetDisponibilidadeInfo">
+                <input message="tns:DisponibilidadeRequestMessage"/>
+                <output message="tns:DisponibilidadeResponseMessage"/>
+            </operation>
+            <operation name="GetPassageiroInfo">
+                <input message="tns:PassageiroRequestMessage"/>
+                <output message="tns:PassageiroResponseMessage"/>
+            </operation>
+            <operation name="GetDetalhesPassageiroInfo">
+                <input message="tns:DetalhesPassageiroRequestMessage"/>
+            </operation>
+            <operation name="ReservaInfo">
+                <input message="tns:ReservaRequestMessage"/>
+            </operation>
         </portType>
-        <binding name="PagamentoInfoBinding" type="tns:PagamentoInfoPortType">
+        <binding name="GestaoInfoBinding" type="tns:GestaoInfoPortType">
             <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
             <operation name="GetPagamentoInfo">
-                <soap:operation soapAction="http://www.example.com/pagamentoInfo/GetPagamentoInfo"/>
+                <soap:operation soapAction="GetPagamentoInfo"/>
+                <input>
+                    <soap:body use="literal"/>
+                </input>
+            </operation>
+            <operation name="GetDisponibilidadeInfo">
+                <soap:operation soapAction="GetDisponibilidadeInfo"/>
+                <input>
+                    <soap:body use="literal"/>
+                </input>
+                <output>
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="GetPassageiroInfo">
+                <soap:operation soapAction="GetPassageiroInfo"/>
+                <input>
+                    <soap:body use="literal"/>
+                </input>
+                <output>
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="GetDetalhesPassageiroInfo">
+                <soap:operation soapAction="GetDetalhesPassageiroInfo"/>
+                <input>
+                    <soap:body use="literal"/>
+                </input>
+            </operation>
+            <operation name="ReservaInfo">
+                <soap:operation soapAction="ReservaInfo"/>
                 <input>
                     <soap:body use="literal"/>
                 </input>
             </operation>
         </binding>
-        <service name="PagamentoReservaService">
+        <service name="GestaoReservaService">
             <documentation>This service provides information about reserva based on their id_reserva code.</documentation>
-            <port binding="tns:PagamentoInfoBinding" name="PagamentoInfoPort">
-                <soap:address location="http://www.example.com/pagamentoReservaService"/>
+            <port binding="tns:GestaoInfoBinding" name="GestaoInfoPort">
+                <soap:address location="http://www.example.com/gestaoReservaService"/>
             </port>
         </service>
     </definitions>

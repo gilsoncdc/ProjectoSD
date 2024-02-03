@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="ReservaSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log level="full"/>
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:ReservaRequest/id_voo" name="idvoo" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:ReservaRequest/id_passageiro" name="idpassageiro" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:ReservaRequest/data_reserva" name="datareserva" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:ReservaRequest/classe" name="classe" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:ReservaRequest/numero_assento" name="mumeroassento" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <dat:opInsertReserva>
+                        <dat:id_voo>$1</dat:id_voo>
+                        <dat:id_passageiro>$2</dat:id_passageiro>
+                        <dat:numero_assento>$3</dat:numero_assento>
+                        <dat:data_reserva>$4</dat:data_reserva>
+                        <dat:classe>$5</dat:classe>
+                    </dat:opInsertReserva>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:idvoo"/>
+            <arg evaluator="xml" expression="$ctx:idpassageiro"/>
+            <arg evaluator="xml" expression="$ctx:numeroassento"/>
+            <arg evaluator="xml" expression="$ctx:datareserva"/>
+            <arg evaluator="xml" expression="$ctx:classe"/>
+        </args>
+    </payloadFactory>
+    <call>
+        <endpoint>
+            <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
+                <suspendOnFailure>
+                    <initialDuration>-1</initialDuration>
+                    <progressionFactor>-1</progressionFactor>
+                    <maximumDuration>0</maximumDuration>
+                </suspendOnFailure>
+                <markForSuspension>
+                    <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                </markForSuspension>
+            </address>
+        </endpoint>
+        <source type="body"/>
+    </call>
+</sequence>

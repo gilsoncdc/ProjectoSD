@@ -22,6 +22,7 @@
                     <arg evaluator="xml" expression="$ctx:idmanutencao"/>
                 </args>
             </payloadFactory>
+            <header name="Action" scope="default" value="dat:opInsertProblema"/>
             <send>
                 <endpoint>
                     <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
@@ -64,7 +65,8 @@
                     <arg evaluator="xml" expression="$ctx:idmanutencao"/>
                 </args>
             </payloadFactory>
-            <send>
+            <header name="Action" scope="default" value="dat:opInsertTarefas"/>
+            <call>
                 <endpoint>
                     <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
                         <suspendOnFailure>
@@ -77,11 +79,10 @@
                         </markForSuspension>
                     </address>
                 </endpoint>
-            </send>
+            </call>
+            <respond/>
         </inSequence>
-        <outSequence>
-            <send/>
-        </outSequence>
+        <outSequence/>
         <faultSequence/>
     </resource>
     <resource methods="POST" uri-template="/InsertPecasManutencao">
@@ -106,6 +107,7 @@
                     <arg evaluator="xml" expression="$ctx:idmanutencao"/>
                 </args>
             </payloadFactory>
+            <header name="Action" scope="default" value="dat:InsertPecasManutencao"/>
             <send>
                 <endpoint>
                     <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
@@ -129,13 +131,160 @@
     <resource methods="GET" uri-template="/notificacao/{id_manutencao}">
         <inSequence>
             <log level="full"/>
-            <property expression="get-property('uri.var.id_manutencao')" name="idmanutencao" scope="default" type="STRING"/>
+            <property expression="get-property('uri.var.id_manutencao')" name="idmanutencao" scope="default" type="INTEGER"/>
             <log>
                 <property expression="$ctx:idmanutencao" name="idmanutencao"/>
             </log>
+            <sequence key="GetManutencaoSequence"/>
+            <sequence key="GetEquipaSequence"/>
+            <payloadFactory media-type="json">
+                <format>{&#xd;
+      "manutencao": {&#xd;
+             "modelo":"$1",&#xd;
+              "ano_fabricacao":"$2",&#xd;
+               "data":"$3",&#xd;
+               "nome":"$4",&#xd;
+                "hora_inicio":"$5",&#xd;
+                "hora_inicio":"$6",&#xd;
+                 "equipa": {&#xd;
+                       "elemento 1": "$7",&#xd;
+                       "email 1":"$8",&#xd;
+                        "elemento 2":"$9",&#xd;
+                        "email 2":"$10",&#xd;
+                        "elemento 3":"$11",&#xd;
+                        "email 3":"$12"&#xd;
+                  }&#xd;
+       }&#xd;
+}</format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:modelo"/>
+                    <arg evaluator="xml" expression="$ctx:ano_fabricacao"/>
+                    <arg evaluator="xml" expression="$ctx:data"/>
+                    <arg evaluator="xml" expression="$ctx:nome"/>
+                    <arg evaluator="xml" expression="$ctx:hora_inicio"/>
+                    <arg evaluator="xml" expression="$ctx:hora_fim"/>
+                    <arg evaluator="xml" expression="$ctx:elemento1"/>
+                    <arg evaluator="xml" expression="$ctx:email1"/>
+                    <arg evaluator="xml" expression="$ctx:elemento2"/>
+                    <arg evaluator="xml" expression="$ctx:email2"/>
+                    <arg evaluator="xml" expression="$ctx:elemento3"/>
+                    <arg evaluator="xml" expression="$ctx:email3"/>
+                </args>
+            </payloadFactory>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/statusAeronave">
+        <inSequence>
+            <log/>
+            <property expression="json-eval($.id_aeronave)" name="idaeronave" scope="default" type="STRING"/>
+            <property expression="json-eval($.estado)" name="estado" scope="default" type="STRING"/>
+            <payloadFactory media-type="xml">
+                <format>
+                    <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                            <dat:opUpdateStatusAeronave>
+                                <dat:estado>$1</dat:estado>
+                                <dat:id_aeronave>$2</dat:id_aeronave>
+                            </dat:opUpdateStatusAeronave>
+                        </soapenv:Body>
+                    </soapenv:Envelope>
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:estado"/>
+                    <arg evaluator="xml" expression="$ctx:idaeronave"/>
+                </args>
+            </payloadFactory>
+            <header name="Action" scope="default" value="dat:opUpdateStatusAeronave"/>
+            <send>
+                <endpoint>
+                    <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
+                        <suspendOnFailure>
+                            <initialDuration>-1</initialDuration>
+                            <progressionFactor>-1</progressionFactor>
+                            <maximumDuration>0</maximumDuration>
+                        </suspendOnFailure>
+                        <markForSuspension>
+                            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                        </markForSuspension>
+                    </address>
+                </endpoint>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/statusManutencao">
+        <inSequence>
+            <log/>
+            <property expression="json-eval($.id_manutencao)" name="idmanutencao" scope="default" type="STRING"/>
+            <property expression="json-eval($.status)" name="status" scope="default" type="STRING"/>
+            <payloadFactory media-type="xml">
+                <format>
+                    <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                            <dat:opUpdateStatusManutencao>
+                                <dat:status>$1</dat:status>
+                                <dat:id_manutencao>$2</dat:id_manutencao>
+                            </dat:opUpdateStatusManutencao>
+                        </soapenv:Body>
+                    </soapenv:Envelope>
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:status"/>
+                    <arg evaluator="xml" expression="$ctx:idmanutencao"/>
+                </args>
+            </payloadFactory>
+            <header name="Action" scope="default" value="dat:opUpdateStatusManutencao"/>
+            <send>
+                <endpoint>
+                    <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
+                        <suspendOnFailure>
+                            <initialDuration>-1</initialDuration>
+                            <progressionFactor>-1</progressionFactor>
+                            <maximumDuration>0</maximumDuration>
+                        </suspendOnFailure>
+                        <markForSuspension>
+                            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                        </markForSuspension>
+                    </address>
+                </endpoint>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/iventario/{estado}">
+        <inSequence>
+            <log/>
+            <property expression="get-property('uri.var.estado')" name="estado" scope="default" type="STRING"/>
+            <payloadFactory media-type="xml">
+                <format>
+                    <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                            <dat:opGetPecasDisponivel>
+                                <dat:estado>$1</dat:estado>
+                            </dat:opGetPecasDisponivel>
+                        </soapenv:Body>
+                    </soapenv:Envelope>
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:estado"/>
+                </args>
+            </payloadFactory>
+            <header name="Action" scope="default" value="dat:opGetPecasDisponivel"/>
             <call>
                 <endpoint>
-                    <address format="rest" uri="http://laptop-n9s5k35d:8290/services/GestaoVooDataService/agendamentoManutencao?id_manutencao=1">
+                    <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
                         <suspendOnFailure>
                             <initialDuration>-1</initialDuration>
                             <progressionFactor>-1</progressionFactor>
@@ -147,6 +296,82 @@
                     </address>
                 </endpoint>
             </call>
+            <property expression="(/*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='Entries' and namespace-uri()='http://ws.wso2.org/dataservice']/*[local-name()='Entry']/*[local-name()='nome'])[position()=1]" name="peca1" scope="default" type="STRING"/>
+            <property expression="(/*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='Entries' and namespace-uri()='http://ws.wso2.org/dataservice']/*[local-name()='Entry']/*[local-name()='nome'])[position()=2]" name="peca2" scope="default" type="STRING"/>
+            <property expression="(/*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='Entries' and namespace-uri()='http://ws.wso2.org/dataservice']/*[local-name()='Entry']/*[local-name()='nome'])[position()=3]" name="peca3" scope="default" type="STRING"/>
+            <property expression="(/*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='Entries' and namespace-uri()='http://ws.wso2.org/dataservice']/*[local-name()='Entry']/*[local-name()='nome'])[position()=4]" name="peca4" scope="default" type="STRING"/>
+            <payloadFactory media-type="json">
+                <format>{&#xd;
+	"peca1": "$1",&#xd;
+    "peca2": "$2",&#xd;
+    "peca3": "$3",&#xd;
+    "peca4": "$4"&#xd;
+}</format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:peca1"/>
+                    <arg evaluator="xml" expression="$ctx:peca2"/>
+                    <arg evaluator="xml" expression="$ctx:peca3"/>
+                    <arg evaluator="xml" expression="$ctx:peca4"/>
+                </args>
+            </payloadFactory>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/slot">
+        <inSequence>
+            <log level="full"/>
+            <property expression="json-eval($.data)" name="data" scope="default" type="STRING"/>
+            <property expression="json-eval($.hora_inicio)" name="hora_inicio" scope="default" type="STRING"/>
+            <property expression="json-eval($.hora_fim)" name="hora_fim" scope="default" type="STRING"/>
+            <property expression="json-eval($.nome)" name="nome" scope="default" type="STRING"/>
+            <log level="full"/>
+            <payloadFactory media-type="xml">
+                <format>
+                    <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                            <dat:opGetSlotManutencao>
+                                <dat:data>$1</dat:data>
+                                <dat:hora_inicio>$2</dat:hora_inicio>
+                                <dat:hora_fim>$3</dat:hora_fim>
+                                <dat:nome>$4</dat:nome>
+                            </dat:opGetSlotManutencao>
+                        </soapenv:Body>
+                    </soapenv:Envelope>
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:data"/>
+                    <arg evaluator="xml" expression="$ctx:hora_inicio"/>
+                    <arg evaluator="xml" expression="$ctx:hora_fim"/>
+                    <arg evaluator="xml" expression="$ctx:nome"/>
+                </args>
+            </payloadFactory>
+            <header name="Action" scope="default" value="dat:opGetSlotManutencao"/>
+            <call>
+                <endpoint>
+                    <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
+                        <suspendOnFailure>
+                            <initialDuration>-1</initialDuration>
+                            <progressionFactor>-1</progressionFactor>
+                            <maximumDuration>0</maximumDuration>
+                        </suspendOnFailure>
+                        <markForSuspension>
+                            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                        </markForSuspension>
+                    </address>
+                </endpoint>
+            </call>
+            <property expression="//*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='Entries' and namespace-uri()='http://ws.wso2.org/dataservice']/*[local-name()='Entry']/*[local-name()='status']" name="estado" scope="default" type="STRING"/>
+            <payloadFactory media-type="json">
+                <format>{&#xd;
+     "estado": "$1"&#xd;
+}</format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:estado"/>
+                </args>
+            </payloadFactory>
             <respond/>
         </inSequence>
         <outSequence/>

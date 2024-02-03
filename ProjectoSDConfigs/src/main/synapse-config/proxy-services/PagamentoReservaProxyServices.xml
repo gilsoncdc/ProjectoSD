@@ -2,53 +2,35 @@
 <proxy name="PagamentoReservaProxyServices" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
     <target>
         <inSequence>
-            <log level="full"/>
-            <header description="SOAPAction" name="SOAPAction" scope="transport" value="urn:opUpdateReservaPagamento"/>
-            <property expression="/soapenv:Envelope/soapenv:Body/pag:PagamentoRequest/id_reserva" name="idreserva" scope="default" type="STRING" xmlns:pag="http://www.example.com/pagamentoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
-            <property expression="/soapenv:Envelope/soapenv:Body/pag:PagamentoRequest/montante" name="montante" scope="default" type="STRING" xmlns:pag="http://www.example.com/pagamentoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
-            <property expression="/soapenv:Envelope/soapenv:Body/pag:PagamentoRequest/data_pagamento" name="datapagamento" scope="default" type="STRING" xmlns:pag="http://www.example.com/pagamentoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
-            <payloadFactory media-type="xml">
-                <format>
-                    <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-                        <soapenv:Header/>
-                        <soapenv:Body>
-                            <dat:opUpdateReservaPagament>
-                                <dat:id_reserva>$1</dat:id_reserva>
-                                <dat:montante>$2</dat:montante>
-                                <dat:data_pagamento>$3</dat:data_pagamento>
-                            </dat:opUpdateReservaPagament>
-                        </soapenv:Body>
-                    </soapenv:Envelope>
-                </format>
-                <args>
-                    <arg evaluator="xml" expression="$ctx:idreserva"/>
-                    <arg evaluator="xml" expression="$ctx:montante"/>
-                    <arg evaluator="xml" expression="$ctx:datapagamento"/>
-                </args>
-            </payloadFactory>
             <log>
-                <property expression="$ctx:idreserva" name="idreserva"/>
-                <property expression="$ctx:montante" name="montante"/>
-                <property expression="$ctx:datapagamento" name="datapagamento"/>
+                <property expression="get-property('Action')" name="action"/>
             </log>
-            <property description="messageProperty" name="messageType" scope="axis2" type="STRING" value="application/soap+xml"/>
-            <send>
-                <endpoint>
-                    <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
-                        <suspendOnFailure>
-                            <initialDuration>-1</initialDuration>
-                            <progressionFactor>-1</progressionFactor>
-                            <maximumDuration>0</maximumDuration>
-                        </suspendOnFailure>
-                        <markForSuspension>
-                            <retriesBeforeSuspension>0</retriesBeforeSuspension>
-                        </markForSuspension>
-                    </address>
-                </endpoint>
-            </send>
+            <switch source="get-property('Action')">
+                <case regex="GetDisponibilidadeInfo">
+                    <sequence key="DisponibilidadeSequence"/>
+                </case>
+                <case regex="GetPagamentoInfo">
+                    <sequence key="PagamentoSequence"/>
+                </case>
+                <case regex="GetPassageiroInfo">
+                    <sequence key="ConfirmacaoSequence"/>
+                </case>
+                <case regex="GetDetalhesPassageiroInfo">
+                    <sequence key="DetalhesPassageiroSequence"/>
+                </case>
+                <case regex="ReservaInfo">
+                    <sequence key="ReservaSequence"/>
+                </case>
+                <default>
+                    <log>
+                        <property name="ola" value="ola"/>
+                    </log>
+                </default>
+            </switch>
+            <respond/>
         </inSequence>
         <outSequence>
-            <send/>
+            <respond/>
         </outSequence>
         <faultSequence/>
     </target>

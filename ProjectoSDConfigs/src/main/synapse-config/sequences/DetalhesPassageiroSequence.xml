@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="DetalhesPassageiroSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log level="full"/>
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:DetalhesPassageiroRequest/nome" name="nome" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:DetalhesPassageiroRequest/sexo" name="sexo" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:DetalhesPassageiroRequest/data_nascimento" name="nascimento" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:DetalhesPassageiroRequest/endereco" name="endereco" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:DetalhesPassageiroRequest/num_pa" name="numpa" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:DetalhesPassageiroRequest/nacionalidade" name="nacionalidade" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:DetalhesPassageiroRequest/email" name="email" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <dat:opInsertPassageiro>
+                        <dat:nome>$1</dat:nome>
+                        <dat:sexo>$2</dat:sexo>
+                        <dat:data_nascimento>$3</dat:data_nascimento>
+                        <dat:endereco>$4</dat:endereco>
+                        <dat:num_pa>$5</dat:num_pa>
+                        <dat:nacionalidade>$6</dat:nacionalidade>
+                        <dat:email>$7</dat:email>
+                    </dat:opInsertPassageiro>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:nome"/>
+            <arg evaluator="xml" expression="$ctx:sexo"/>
+            <arg evaluator="xml" expression="$ctx:nascimento"/>
+            <arg evaluator="xml" expression="$ctx:endereco"/>
+            <arg evaluator="xml" expression="$ctx:numpa"/>
+            <arg evaluator="xml" expression="$ctx:nacionalidade"/>
+            <arg evaluator="xml" expression="$ctx:email"/>
+        </args>
+    </payloadFactory>
+    <call>
+        <endpoint>
+            <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
+                <suspendOnFailure>
+                    <initialDuration>-1</initialDuration>
+                    <progressionFactor>-1</progressionFactor>
+                    <maximumDuration>0</maximumDuration>
+                </suspendOnFailure>
+                <markForSuspension>
+                    <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                </markForSuspension>
+            </address>
+        </endpoint>
+    </call>
+</sequence>

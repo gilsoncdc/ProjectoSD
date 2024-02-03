@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="GetEquipaSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <dat:opGetEquipaManutencao>
+                        <dat:id_manutencao>$1</dat:id_manutencao>
+                    </dat:opGetEquipaManutencao>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:idmanutencao"/>
+        </args>
+    </payloadFactory>
+    <header name="Action" scope="default" value="dat:opGetEquipaManutencao"/>
+    <call>
+        <endpoint>
+            <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
+                <suspendOnFailure>
+                    <initialDuration>-1</initialDuration>
+                    <progressionFactor>-1</progressionFactor>
+                    <maximumDuration>0</maximumDuration>
+                </suspendOnFailure>
+                <markForSuspension>
+                    <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                </markForSuspension>
+            </address>
+        </endpoint>
+    </call>
+    <log level="full"/>
+    <property expression="(/*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='Entries' and namespace-uri()='http://ws.wso2.org/dataservice']/*[local-name()='Entry']/*[local-name()='nome'])[position()=1]" name="elemento1" scope="default" type="STRING"/>
+    <property expression="(/*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='Entries' and namespace-uri()='http://ws.wso2.org/dataservice']/*[local-name()='Entry']/*[local-name()='email'])[position()=1]" name="email1" scope="default" type="STRING"/>
+    <property expression="(/*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='Entries' and namespace-uri()='http://ws.wso2.org/dataservice']/*[local-name()='Entry']/*[local-name()='nome'])[position()=2]" name="elemento2" scope="default" type="STRING"/>
+    <property expression="(/*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='Entries' and namespace-uri()='http://ws.wso2.org/dataservice']/*[local-name()='Entry']/*[local-name()='email'])[position()=2]" name="email2" scope="default" type="STRING"/>
+    <property expression="(/*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='Entries' and namespace-uri()='http://ws.wso2.org/dataservice']/*[local-name()='Entry']/*[local-name()='nome'])[position()=3]" name="elemento3" scope="default" type="STRING"/>
+    <property expression="(/*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='Entries' and namespace-uri()='http://ws.wso2.org/dataservice']/*[local-name()='Entry']/*[local-name()='email'])[position()=3]" name="email3" scope="default" type="STRING"/>
+    <log>
+        <property expression="$ctx:elemento1" name="nome1"/>
+        <property expression="$ctx:email1" name="email1"/>
+        <property expression="$ctx:elemento2" name="nome2"/>
+        <property expression="$ctx:email2" name="email2"/>
+        <property expression="$ctx:elemento3" name="nome3"/>
+        <property expression="$ctx:email3" name="email3"/>
+    </log>
+</sequence>

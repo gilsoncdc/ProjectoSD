@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="ConfirmacaoSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:PassageirosRequest/id_passageiro" name="idpassageiro" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <dat:opPassageiroDetails>
+                        <dat:id_passageiro>$1</dat:id_passageiro>
+                    </dat:opPassageiroDetails>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:idpassageiro"/>
+        </args>
+    </payloadFactory>
+    <call>
+        <endpoint>
+            <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
+                <suspendOnFailure>
+                    <initialDuration>-1</initialDuration>
+                    <progressionFactor>-1</progressionFactor>
+                    <maximumDuration>0</maximumDuration>
+                </suspendOnFailure>
+                <markForSuspension>
+                    <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                </markForSuspension>
+            </address>
+        </endpoint>
+    </call>
+    <property expression="//*[local-name()='Entries' and namespace-uri()='http://ws.wso2.org/dataservice']/*[local-name()='Entry']/*[local-name()='nome']" name="nome" scope="default" type="STRING" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <property expression="//*[local-name()='Entries' and namespace-uri()='http://ws.wso2.org/dataservice']/*[local-name()='Entry']/*[local-name()='email']" name="email" scope="default" type="STRING" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Body>
+                    <Entries xmlns="http://ws.wso2.org/dataservice">
+                        <Entry>
+                            <nome>$1</nome>
+                            <email>$2</email>
+                        </Entry>
+                    </Entries>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:nome"/>
+            <arg evaluator="xml" expression="$ctx:email"/>
+        </args>
+    </payloadFactory>
+</sequence>

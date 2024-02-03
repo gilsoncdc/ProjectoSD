@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="DisponibilidadeSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:DisponibilidadeRequest/id_voo" name="idvoo" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <dat:opGestDisponibilidadeVoo>
+                        <dat:id_voo>$1</dat:id_voo>
+                    </dat:opGestDisponibilidadeVoo>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:idvoo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+        </args>
+    </payloadFactory>
+    <call>
+        <endpoint key="GestaoVoosEndPoint"/>
+    </call>
+    <property expression="//*[local-name()='Entries' and namespace-uri()='http://ws.wso2.org/dataservice']/*[local-name()='Entry']/*[local-name()='total_reserva']" name="totalreserva" scope="default" type="STRING" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <property expression="//*[local-name()='Entries' and namespace-uri()='http://ws.wso2.org/dataservice']/*[local-name()='Entry']/*[local-name()='capacidade']" name="capacidade" scope="default" type="STRING" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Body>
+                    <Entries xmlns="http://ws.wso2.org/dataservice">
+                        <Entry>
+                            <total_reserva>$1</total_reserva>
+                            <capacidade>$2</capacidade>
+                        </Entry>
+                    </Entries>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:totalreserva"/>
+            <arg evaluator="xml" expression="$ctx:capacidade"/>
+        </args>
+    </payloadFactory>
+</sequence>

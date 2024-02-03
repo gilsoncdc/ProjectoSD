@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="PagamentoSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log level="full"/>
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:PagamentoRequest/id_reserva" name="idreserva" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:PagamentoRequest/montante" name="montante" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <property expression="/soapenv:Envelope/soapenv:Body/ges:PagamentoRequest/data_pagamento" name="datapagamento" scope="default" type="STRING" xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <dat:opUpdateReservaPagamento>
+                        <dat:id_reserva>$1</dat:id_reserva>
+                        <dat:montante>$2</dat:montante>
+                        <dat:data_pagamento>$3</dat:data_pagamento>
+                    </dat:opUpdateReservaPagamento>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:idreserva"/>
+            <arg evaluator="xml" expression="$ctx:montante"/>
+            <arg evaluator="xml" expression="$ctx:datapagamento"/>
+        </args>
+    </payloadFactory>
+    <call blocking="true">
+        <endpoint key="GestaoVoosEndPoint"/>
+    </call>
+    <!--
+    <payloadFactory media-type="json">
+        <format>{&#xd;
+  "capture_method": "automatic",&#xd;
+  "description": "Pagamento",&#xd;
+  "payment_method_options": {&#xd;
+    "card": {&#xd;
+      "moto": "true"&#xd;
+    }&#xd;
+  },&#xd;
+  "statement_descriptor": "My account",&#xd;
+  "currency": "usd",&#xd;
+  "payment_method": "pm_1OcQ0YFuYoDFdWqFd8EhAbTI",&#xd;
+  "confirm": "true",&#xd;
+  "amount": "$1",&#xd;
+  "payment_method_types": [&#xd;
+    "card"&#xd;
+  ]&#xd;
+}</format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:montante"/>
+        </args>
+    </payloadFactory>
+    <property name="Authorization" scope="default" type="STRING" value="Bearer sk_test_51OZaQIFuYoDFdWqFvj1uMDY1b7pfjySLKRCfltMIoSObsfabTaP9VBZsk2Nw5DGeJBR0cHWfd9IUfyfxDYeJZJjU00q9PlLVvN"/>
+    <log level="full"/>
+    <header expression="$ctx:Authorization" name="Authorization" scope="transport"/>
+    <call>
+        <endpoint key="StripePaymentEndPoint"/>
+    </call>-->
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:ges="http://www.example.com/gestaoInfo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Body>
+                    <ges:PagamentoRequest>
+                        <id_reserva xmlns="">$1</id_reserva>
+                        <montante xmlns="">$2</montante>
+                        <data_pagamento xmlns="">$3</data_pagamento>
+                    </ges:PagamentoRequest>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="//id_reserva/text()"/>
+            <arg evaluator="xml" expression="//montante/text()"/>
+            <arg evaluator="xml" expression="//data_pagamento/text()"/>
+        </args>
+    </payloadFactory>
+</sequence>

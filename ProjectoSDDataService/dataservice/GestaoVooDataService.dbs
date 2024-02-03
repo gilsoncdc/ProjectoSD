@@ -1,4 +1,4 @@
-<data transports="http https" serviceGroup="" serviceNamespace="" name="GestaoVooDataService">
+<data transports="http https" name="GestaoVooDataService">
   <description>Fetching Gstao Voos</description>
   <config id="GestaoVoosDB">
     <property name="driverClassName">org.postgresql.Driver</property>
@@ -6,16 +6,10 @@
     <property name="username">postgres</property>
     <property name="password">justina</property>
   </config>
-  <resource path="/passageiros" method="GET">
-    <description />
-    <call-query href="GetPassageiroDetails">
-      <with-param name="id_passageiro " query-param="id_passageiro " />
-    </call-query>
-  </resource>
   <query id="GetPassageiroDetails" useConfig="GestaoVoosDB">
-    <sql>SELECT id_passageiro, nome, sexo, data_nascimento, endereco, num_pa, nacionalidade FROM public.passageiro where id_passageiro = :id_passageiro </sql>
+    <sql>SELECT id_passageiro, nome, sexo, data_nascimento, endereco, num_pa, nacionalidade, email FROM public.passageiro where id_passageiro = :id_passageiro </sql>
     <param type="IN" name="id_passageiro " paramType="SCALAR" sqlType="INTEGER" defaultValue="4" optional="false" />
-    <result element="VooDetails" rowName="voo">
+    <result rowName="Entry" element="Entries">
       <element name="id_passageiro" column="id_passageiro" xsdType="string" requiredRoles="" />
       <element name="nome" column="nome" xsdType="string" requiredRoles="" />
       <element name="sexo" column="sexo" xsdType="string" requiredRoles="" />
@@ -23,22 +17,21 @@
       <element name="endereco" column="endereco" xsdType="string" requiredRoles="" />
       <element name="num_pa" column="num_pa" xsdType="string" requiredRoles="" />
       <element name="nacionalidade" column="nacionalidade" xsdType="string" requiredRoles="" />
+      <element name="email" column="email" xsdType="string" requiredRoles="" />
     </result>
   </query>
   <query id="InsertReserva" useConfig="GestaoVoosDB">
-    <sql>INSERT INTO public.reserva(id_voo, id_passageiro, data_reserva, montante, data_pagamento, classe, numero_assento) VALUES (:id_voo, :id_passageiro, :data_reserva, :montante, :data_pagamento, :classe, :numero_assento)</sql>
+    <sql>INSERT INTO public.reserva(id_voo, id_passageiro, data_reserva, classe, numero_assento) VALUES (:id_voo, :id_passageiro, :data_reserva, :classe, :numero_assento)</sql>
     <param type="IN" name="id_voo" paramType="SCALAR" sqlType="INTEGER" optional="false" />
     <param type="IN" name="id_passageiro" paramType="SCALAR" sqlType="INTEGER" optional="false" />
-    <param type="IN" name="data_pagamento" paramType="SCALAR" sqlType="DATE" optional="false" />
     <param type="IN" name="numero_assento" paramType="SCALAR" sqlType="STRING" optional="false" />
     <param type="IN" name="data_reserva" paramType="SCALAR" sqlType="DATE" optional="false" />
-    <param type="IN" name="montante" paramType="SCALAR" sqlType="NUMERIC" optional="false" />
     <param type="IN" name="classe" paramType="SCALAR" sqlType="INTEGER" optional="false" />
   </query>
   <query id="GetVoosDetails" useConfig="GestaoVoosDB">
     <sql>SELECT id_voo, data, capacidade, hora_partida, hora_chegada, gate_partida, gate_chegada FROM public.voo WHERE id_voo = :id_voo</sql>
     <param type="IN" name="id_voo" paramType="SCALAR" sqlType="INTEGER" optional="false" />
-    <result element="VooDetails" rowName="voo">
+    <result rowName="Entry" element="Entries">
       <element name="id_voo" column="id_voo" xsdType="string" requiredRoles="" />
       <element name="data" column="data" xsdType="string" requiredRoles="" />
       <element name="capacidade" column="capacidade" xsdType="string" requiredRoles="" />
@@ -85,19 +78,19 @@
   <query id="GestDisponibilidadeVoo" useConfig="GestaoVoosDB">
     <sql>SELECT id_voo, total_reserva, capacidade FROM public.v_reserva_voos WHERE id_voo = :id_voo</sql>
     <param type="IN" name="id_voo" paramType="SCALAR" sqlType="INTEGER" optional="false" />
-    <result element="VooDetails" rowName="voo">
+    <result rowName="Entry" element="Entries">
       <element name="id_voo" column="id_voo" xsdType="string" requiredRoles="" />
       <element name="total_reserva" column="total_reserva" xsdType="string" requiredRoles="" />
       <element name="capacidade" column="capacidade" xsdType="string" requiredRoles="" />
     </result>
   </query>
   <query id="GetSlotManutencao" useConfig="GestaoVoosDB">
-    <sql>SELECT id_manutencao, status, data, hora_inicio, hora_fim, id_hangar, nome FROM v_slot_manutencao AND data = :data AND hora_inicio BETWEEN :hora_inicio AND :hora_fim OR hora_fim BETWEEN :hora_inicio AND :hora_fim AND nome = :nome</sql>
+    <sql>SELECT id_manutencao, status, data, hora_inicio, hora_fim, id_hangar, nome FROM v_slot_manutencao WHERE data = :data AND hora_inicio BETWEEN :hora_inicio AND :hora_fim OR hora_fim BETWEEN :hora_inicio AND :hora_fim AND nome = :nome</sql>
     <param type="IN" name="data" paramType="SCALAR" sqlType="DATE" optional="false" />
     <param type="IN" name="hora_inicio" paramType="SCALAR" sqlType="TIME" optional="false" />
     <param type="IN" name="hora_fim" paramType="SCALAR" sqlType="TIME" optional="false" />
     <param type="IN" name="nome" paramType="SCALAR" sqlType="STRING" optional="false" />
-    <result element="VooDetails" rowName="voo">
+    <result rowName="Entry" element="Entries">
       <element name="id_manutencao" column="id_manutencao" xsdType="string" requiredRoles="" />
       <element name="status" column="status" xsdType="string" requiredRoles="" />
       <element name="data" column="data" xsdType="string" requiredRoles="" />
@@ -116,7 +109,7 @@
   <query id="GetAgendamentoManutencao" useConfig="GestaoVoosDB">
     <sql>SELECT modelo, ano_fabricacao, data, nome, hora_inicio, hora_fim FROM v_detalhes_manutencao WHERE id_manutencao = :id_manutencao</sql>
     <param type="IN" name="id_manutencao" paramType="SCALAR" sqlType="INTEGER" optional="false" />
-    <result element="VooDetails" rowName="voo">
+    <result rowName="Entry" element="Entries">
       <element name="modelo" column="modelo" xsdType="string" requiredRoles="" />
       <element name="ano_fabricacao" column="ano_fabricacao" xsdType="string" requiredRoles="" />
       <element name="data" column="data" xsdType="string" requiredRoles="" />
@@ -128,11 +121,28 @@
   <query id="GetEquipaManutencao" useConfig="GestaoVoosDB">
     <sql>SELECT id_funcionario, nome, email, id_manutencao FROM public.funcionario WHERE id_manutencao = :id_manutencao</sql>
     <param type="IN" name="id_manutencao" paramType="SCALAR" sqlType="INTEGER" optional="false" />
-    <result element="VooDetails" rowName="voo">
+    <result rowName="Entry" element="Entries">
       <element name="id_funcionario" column="id_funcionario" xsdType="string" requiredRoles="" />
       <element name="nome" column="nome" xsdType="string" requiredRoles="" />
       <element name="email" column="email" xsdType="string" requiredRoles="" />
       <element name="id_manutencao" column="id_manutencao" xsdType="string" requiredRoles="" />
+    </result>
+  </query>
+  <query id="InsertPassageiro" useConfig="GestaoVoosDB">
+    <sql>INSERT INTO public.passageiro(nome, sexo, data_nascimento, endereco, num_pa, nacionalidade, email) VALUES (:nome, :sexo, :data_nascimento, :endereco, :num_pa, :nacionalidade, :email)</sql>
+    <param type="IN" name="nome" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="sexo" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="data_nascimento" paramType="SCALAR" sqlType="DATE" optional="false" />
+    <param type="IN" name="endereco" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="num_pa" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="nacionalidade" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="email" paramType="SCALAR" sqlType="STRING" optional="false" />
+  </query>
+  <query id="GetPecasDisponivel" useConfig="GestaoVoosDB">
+    <sql>SELECT nome FROM public.pecas where estado = :estado</sql>
+    <param type="IN" name="estado" paramType="SCALAR" sqlType="INTEGER" optional="false" />
+    <result rowName="Entry" element="Entries">
+      <element name="nome" column="nome" xsdType="string" requiredRoles="" />
     </result>
   </query>
   <operation name="opPassageiroDetails">
@@ -145,8 +155,6 @@
       <with-param name="id_voo" query-param="id_voo" />
       <with-param name="id_passageiro" query-param="id_passageiro" />
       <with-param name="data_reserva" query-param="data_reserva" />
-      <with-param name="montante" query-param="montante" />
-      <with-param name="data_pagamento" query-param="data_pagamento" />
       <with-param name="classe" query-param="classe" />
       <with-param name="numero_assento" query-param="numero_assento" />
     </call-query>
@@ -226,16 +234,20 @@
       <with-param name="id_manutencao" query-param="id_manutencao" />
     </call-query>
   </operation>
-  <resource path="/equipa" method="GET">
-    <description />
-    <call-query href="GetEquipaManutencao">
-      <with-param name="id_manutencao" query-param="id_manutencao" />
+  <operation name="opInsertPassageiro">
+    <call-query href="InsertPassageiro">
+      <with-param name="nome" query-param="nome" />
+      <with-param name="sexo" query-param="sexo" />
+      <with-param name="data_nascimento" query-param="data_nascimento" />
+      <with-param name="endereco" query-param="endereco" />
+      <with-param name="num_pa" query-param="num_pa" />
+      <with-param name="nacionalidade" query-param="nacionalidade" />
+      <with-param name="email" query-param="email" />
     </call-query>
-  </resource>
-  <resource path="/agendamentoManutencao" method="GET">
-    <description />
-    <call-query href="GetAgendamentoManutencao">
-      <with-param name="id_manutencao" query-param="id_manutencao" />
+  </operation>
+  <operation name="opGetPecasDisponivel">
+    <call-query href="GetPecasDisponivel">
+      <with-param name="estado" query-param="estado" />
     </call-query>
-  </resource>
+  </operation>
 </data>

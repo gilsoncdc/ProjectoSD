@@ -20,4 +20,28 @@
     <artifact name="PagamentoReservaLocalEntry" groupId="com.example.local-entry" version="1.0.0" type="synapse/local-entry" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/local-entries/PagamentoReservaLocalEntry.xml</file>
     </artifact>
+    <artifact name="GetManutencaoSequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/GetManutencaoSequence.xml</file>
+    </artifact>
+    <artifact name="GetEquipaSequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/GetEquipaSequence.xml</file>
+    </artifact>
+    <artifact name="DisponibilidadeSequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DisponibilidadeSequence.xml</file>
+    </artifact>
+    <artifact name="PagamentoSequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/PagamentoSequence.xml</file>
+    </artifact>
+    <artifact name="StripePaymentEndPoint" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/StripePaymentEndPoint.xml</file>
+    </artifact>
+    <artifact name="ConfirmacaoSequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/ConfirmacaoSequence.xml</file>
+    </artifact>
+    <artifact name="ReservaSequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/ReservaSequence.xml</file>
+    </artifact>
+    <artifact name="DetalhesPassageiroSequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DetalhesPassageiroSequence.xml</file>
+    </artifact>
 </artifacts>
