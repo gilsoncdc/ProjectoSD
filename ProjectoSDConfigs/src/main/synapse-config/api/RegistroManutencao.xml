@@ -377,4 +377,59 @@
         <outSequence/>
         <faultSequence/>
     </resource>
+    <resource methods="POST" uri-template="/manutencao">
+        <inSequence>
+            <log level="full"/>
+            <property expression="json-eval($.id_aeronave)" name="idaeronave" scope="default" type="STRING"/>
+            <property expression="json-eval($.status)" name="status" scope="default" type="STRING"/>
+            <property expression="json-eval($.data)" name="data" scope="default" type="STRING"/>
+            <property expression="json-eval($.hora_inicio)" name="horainicio" scope="default" type="STRING"/>
+            <property expression="json-eval($.hora_fim)" name="horafim" scope="default" type="STRING"/>
+            <property expression="json-eval($.id_hangar)" name="idhangar" scope="default" type="STRING"/>
+            <payloadFactory media-type="xml">
+                <format>
+                    <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                            <dat:opInsertManutencao>
+                                <dat:id_aeronave>$1</dat:id_aeronave>
+                                <dat:status>$2</dat:status>
+                                <dat:data>$3</dat:data>
+                                <dat:hora_inicio>$4</dat:hora_inicio>
+                                <dat:hora_fim>$5</dat:hora_fim>
+                                <dat:id_hangar>$6</dat:id_hangar>
+                            </dat:opInsertManutencao>
+                        </soapenv:Body>
+                    </soapenv:Envelope>
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:idaeronave"/>
+                    <arg evaluator="xml" expression="$ctx:status"/>
+                    <arg evaluator="xml" expression="$ctx:data"/>
+                    <arg evaluator="xml" expression="$ctx:horainicio"/>
+                    <arg evaluator="xml" expression="$ctx:horafim"/>
+                    <arg evaluator="xml" expression="$ctx:idhangar"/>
+                </args>
+            </payloadFactory>
+            <header name="Action" scope="default" value="dat:opInsertManutencao"/>
+            <send>
+                <endpoint>
+                    <address format="soap11" uri="http://LAPTOP-N9S5K35D:8290/services/GestaoVooDataService.SOAP11Endpoint">
+                        <suspendOnFailure>
+                            <initialDuration>-1</initialDuration>
+                            <progressionFactor>-1</progressionFactor>
+                            <maximumDuration>0</maximumDuration>
+                        </suspendOnFailure>
+                        <markForSuspension>
+                            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                        </markForSuspension>
+                    </address>
+                </endpoint>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
 </api>
